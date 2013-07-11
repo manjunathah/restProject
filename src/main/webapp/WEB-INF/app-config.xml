@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<tx:annotation-driven/>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/vlsi"/>
+		<property name="username" value="manjunp"/>
+		<property name="password" value="manjunp"/>
+	</bean>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="annotatedClasses">
+			<list>
+				<value>com.eklakshya.model.Student</value>
+				<value>com.eklakshya.model.Module</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="current_session_context_class">thread</prop>
+    			<prop key="show_sql">true</prop>
+    			<!-- <prop key="hibernate.hbm2ddl.auto">create</prop> -->
+    			<prop key="hibernate.show_sql">true</prop>
+    			<prop key="hibernate.use_sql_comments">true</prop>
+    			<prop key="hibernate.format_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="studentDAO" class="com.eklakshya.repository.StudentDAO">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+</beans>
